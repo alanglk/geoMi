@@ -1,0 +1,14 @@
+FROM python:3.6
+
+# Instalacion de paquetes
+RUN apt update
+
+# Establece el directorio de trabajo del usuario
+WORKDIR /api
+COPY ./api .
+
+# Instalacion de dependencias
+RUN pip install --no-cache-dir -r ./dependencies.txt
+
+# Iniciar aplicacion
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "apirest:app"]

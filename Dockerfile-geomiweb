@@ -1,0 +1,16 @@
+FROM node:20
+EXPOSE 3000
+
+WORKDIR /app
+COPY package*.json ./
+
+# Instalamos las dependencias de la aplicacion
+RUN npm install
+
+# Copiamos el resto de elementos de la aplicacion
+COPY ./web .
+
+EXPOSE 3000
+
+# Iniciamos la aplicacion
+CMD npm start

@@ -1,0 +1,11 @@
+services:
+  geomiapi:
+    image: geomiapi
+    build:
+      context: .
+      dockerfile: Dockerfile-geomiapi
+    ports:
+      - 8000:8000
+  
+  
+    
