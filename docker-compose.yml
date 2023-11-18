@@ -1,11 +1,115 @@
+# Ingeniería Informática de Gestión y Sistemas de Información
+# Administración de Sistemas
+# Alan García Justel
+#
+# Docker-compose de la aplicación
+#
+
+# Contenedores que conforman la aplicación.
 services:
-  geomiapi:
-    image: geomiapi
+  # Aplicacion web principal. Es el contenedor de entrada del usuario.
+  web:
+    image: alan/geomiweb
+    restart: always
+    ports:
+      - 3000:3000
+    networks: # Redes a las que está conectada la aplicación
+      - databaseNetwork
+      - apiNetwork
+      - monitoringNetwork
+
+  # Contenedor de la api de geocoding. Se conecta al servicio de geocoding de Google.
+  api:
+    image: alan/geomiapi
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile-geomiapi
     ports:
-      - 8000:8000
+      - 3001:8000
+    networks:
+      - apiNetwork
   
+  # Base de datos de la aplicación. Es una base de datos MariaDB
+  db:
+    image: mariadb
+    restart: always
+    volumes:
+      - ./db/database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: test1234
+      MYSQL_DATABASE: database
+    ports:
+      - 3002:3306
+    networks:
+      - databaseNetwork
+
+  # Contenedor para facilitar el debugg de la base de datos al usuario.
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - 3003:8080
+    networks:
+      - databaseNetwork
   
-    
+  # Contenedor para mostrar un dashboard grafana para monitorización
+  grafana:
+    image: grafana/grafana
+    restart: unless-stopped
+    environment:
+      GF_AUTH_DISABLE_LOGIN_FORM: true 
+      GF_AUTH_ANONYMOUS_ENABLED: true 
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+    user: ${UID:-1000}
+    volumes:
+      - ./debug/grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./debug/grafana:/var/lib/grafana # Persistencia de los dashboards y alertas
+    ports:
+      - 3004:3000
+    networks:
+      - monitoringNetwork
+
+  # Exporter para tomar los datos de la base de datos y enviarselos a Prometheus
+  #mysqld-exporter:
+  #  image: prom/mysqld-exporter
+  #  #restart: unless-stopped
+  #  environment:
+  #    DATA_SOURCE_NAME: exporter:test1234@(db:3306)/database
+  #
+  #  # Esto no esta en la documentación. Me ha costado horrores hacerlo funcionar :) 
+  #  # Al parecer, aunque pongar la variable de entorno, necesitas también el archivo de configuración
+  #  volumes:
+  #    - ./debug/mysqld:/mysqld
+  #  command: "cd /mysqld && /bin/mysqld_exporter"
+  #  ports:
+  #    - 3005:9100
+  #  networks:
+  #    - monitoringNetwork
+  #  depends_on: # Se tiene que inicializar la base de datos antes
+  #    - db
+
+  # Contenedor Prometheus para gestionar la información de debugg
+  prometheus:
+    image: prom/prometheus
+    restart: unless-stopped
+    user: ${UID:-1000}
+    volumes:
+      - ./debug/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./debug/prometheus/data:/prometheus # Persistencia de las metricas
+    ports:
+      - 3006:9090
+    networks:
+      - monitoringNetwork
+  
+
+# Redes definidas para comunicar contenedores entre sí.
+# Por defecto, todos los contenedores están conectados a la misma red.
+# De esta manera, estamos creando dos redes separadas para evitar que
+# la api que se comunica con Google tenga acceso a la base de datos.
+networks:
+  databaseNetwork:
+  apiNetwork:
+  monitoringNetwork:

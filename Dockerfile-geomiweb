@@ -1,5 +1,4 @@
 FROM node:20
-EXPOSE 3000
 
 WORKDIR /app
 COPY package*.json ./
@@ -8,9 +7,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copiamos el resto de elementos de la aplicacion
-COPY ./web .
+COPY ./web ./web
 
-EXPOSE 3000
-
-# Iniciamos la aplicacion
+# Iniciamos la aplicacion (puerto 3000)
 CMD npm start
