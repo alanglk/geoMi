@@ -1,0 +1,24 @@
+<div class="container mt-5">
+    <h2>Localizaciones guardadas</h2>
+    <table id="table" class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Latitud</th>
+          <th>Longitud</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody id="locals">
+        <% locals.forEach((l) => { %>
+          <tr>
+            <td><%= l.id %></td>
+            <td><%= l.latitud %></td>
+            <td><%= l.longitud %></td>
+            <td><%= l.fecha_localizacion %></td>
+            <td><button id="find-me" class="btn btn-secondary">Get address</button><span style="display: none;">Bilbao</span></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>

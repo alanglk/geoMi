@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('../partials/head') %>
+
+    <!-- CDN para el mapa. Solo se carga si nos hemos loggeado-->
+    <% if (auth) { %>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <% } %>
+</head>
+
+<body class="container">
+    <%- include('../partials/header') %>
+
+    <main>
+        <div class="jumbotron">
+          <h1>This is great</h1>
+          <p>Welcome to templating using EJS</p>
+        </div>
+
+        <% if (auth) { %> 
+          <button id="find-me" class="btn btn-primary">Add new location</button><br />
+          <p id="status"></p>
+          
+          <div class="btn-group" role="group" aria-label="Selector de Botones">
+            <button id="table-btn" type="button" class="btn btn-primary">Table</button>
+            <button id="map-btn" type="button" class="btn btn-primary">Map</button>
+          </div>
+
+
+          <%- include('../partials/table') %>
+          <!--<div id="map" style="display: none;"></div> -->
+          <div id="map" style="height: 400px;"></div>
+        <% } %>
+    </main>
+
+      <footer>
+        <%- include('../partials/footer') %>
+      </footer>
+
+      <!-- Script de localizacion con el navegador. Solo se carga si nos hemos loggeado-->
+      <% if (auth) { %><script src="/static/scripts/geolocation.js"></script><% } %>
+</body>
+</html>

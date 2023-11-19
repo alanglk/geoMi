@@ -7,13 +7,15 @@ const express = require('express'),         // Aplicacion web
       prometheus = require('prom-client')   // Metricas de Prometheus
 
 const { getLocationsOfUser, addNewLocationToUser, addNewUser } = require('./database')
+const { getGeocodingOfLocation } = require('./geomiapi')
+
 
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const GOOGLE_CLIENT_ID = '212108694115-j6afrr08rui0rkmlgc02e0q3bnj3jhf2.apps.googleusercontent.com'
 const GOOGLE_CLIENT_SECRET = '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'
 
-const register = new prometheus.Registry() // Para enviar datos de monitorizacion
-prometheus.collectDefaultMetrics({ register }) // Habilitamos las metricas default
+const register = new prometheus.Registry()      // Para enviar datos de monitorizacion
+prometheus.collectDefaultMetrics({ register })  // Habilitamos las metricas default
 
 const port = 3000
 const app = express()
@@ -81,7 +83,7 @@ app.get('/logout', (req, res, next) => {
 })
 
 app.post('/localize', async (req, res) => {
-  if (!req.session.auth) res.send('Tienes que estar loggead')
+  if (!req.session.auth) res.send('Tienes que estar loggeado')
   else{
     console.log("LOCALIZE!!!")
     console.log(`id: ${req.session.user.id} la: ${req.body.latitude} lo: ${req.body.longitude}`)
@@ -92,7 +94,21 @@ app.post('/localize', async (req, res) => {
   }
 })
 
-// TESTING!!!!!
+app.post('/geocoding', async (req, res) => {
+  // Nos comunicamos con la api (que no se muestra directamente al usuario)
+  // Es enrebesado hacerlo así, pero la idea es que el cliente no acceda
+  // directamente a la api, si no que sea la aplicación web.
+  console.log(req.body)
+  
+  if (!req.session.auth) res.send('Tienes que estar loggeado')
+  else{
+    const lat = req.body.latitude
+    const lon = req.body.longitude
+
+    res.send(await getGeocodingOfLocation(lat, lon))
+  }
+})
+
 // Endpoint para métricas de Prometheus
 app.get('/metrics', async (req, res) => {
   res.setHeader('Content-Type', register.contentType)

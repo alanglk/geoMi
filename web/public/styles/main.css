@@ -1,0 +1,11 @@
+/* -------------- VARIABLES --------------*/
+
+/* -------------- BODY --------------*/
+body { padding-top:50px; }
+
+/* -------------- NAVBAR --------------*/
+/* Resaltar el nombre de usuario loggeado */
+.navbar-nav .nav-item.username {
+  font-weight: bold;
+  color: #272905;
+}
