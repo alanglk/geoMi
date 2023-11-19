@@ -1,5 +1,5 @@
 <h1 align="center" style="border-bottom: none">
-    <a href="http://localhost:3000" target="_blank"><img alt="GeoMi" src="/documentation/images/geoMi.jpg" style="width:50"></a><br>GeoMi
+    <a href="http://localhost:3000" target="_blank"><img alt="GeoMi" src="/documentation/images/geoMi.png" style="width:50"></a><br>GeoMi
 </h1>
 
 <p align="center">Visit <a href="/documentation/" target="_blank">geomi.pdf</a> for the full documentation,
