@@ -1,3 +1,14 @@
+<h1 align="center" style="border-bottom: none">
+    <a href="http://localhost:3000" target="_blank"><img alt="GeoMi" src="/documentation/images/geoMi.jpg"></a><br>GeoMi
+</h1>
+
+<p align="center">Visit <a href="/documentation/" target="_blank">geomi.pdf</a> for the full documentation,
+examples and guides.</p>
+
+<div align="center">
+    <!-- Etiquetas varias -->
+</div>
+
 # TODO LIST
 Aspectos que hay que cambiar en la aplicación antes de la entrega:
 
