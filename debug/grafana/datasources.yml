@@ -1,0 +1,19 @@
+# Ingeniería Informática de Gestión y Sistemas de Información
+# Administración de Sistemas
+# Alan García Justel
+#
+# Fichero de configuración de Grafana. Con este fichero
+# configuramos las entradas de datos para nuestros dashboards
+#
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    orgId: 1
+    url: http://prometheus:9090
+    basicAuth: false
+    isDefault: true
+    editable: true
