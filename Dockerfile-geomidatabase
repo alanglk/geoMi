@@ -1,0 +1,4 @@
+FROM mariadb
+# Añadir el esquema de configuración de la base de datos
+ADD ./db/database.sql /docker-entrypoint-initdb.d
+

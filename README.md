@@ -50,7 +50,7 @@ GeoMi consiste en una aplicación en la que los usuarios son capaces de registra
 
     En este formato se muestra la información de las localizaciones del usuario mediante pines en un mapa. Cada pin tiene una pequeña descripción que indica la `fecha` de la localización y su `id`. Sin embargo, la opción de obtener la dirección en texto de la ubicación no está disponible en este modo.
 
-    ![Mapa de Bilbao](/images/map-example.png) 
+    ![Mapa de Bilbao](/documentation/images/map-example.png) 
 
 Sin embargo, para acceder a todos los datos y a las opciones de añadir nuevas localizaciones, es necesario registrarse e iniciar sesión en la aplicación. Por ello, se ha implementado un sistema de gestión de usuarios con las funciones básicas de _Login_ y _Logout_. Actualmente, solo está implementado el inicio de sesión por medio de __Google OAuth2__ por lo que, para poder tener acceso a la aplicación, es necesario disponer de una cuenta de __Google__.
 
@@ -89,6 +89,17 @@ Una vez se hayan descargado las imágenes y dependencias necesarias, se iniciar�
 
 6. [localhost:3006/](http://localhost:3004/) Servicio de Prometheus. Servicio encargado de tomar y registrar todas las métricas que luego se grafican con Grafana.
 
+
+# Repositorios de imágenes Docker
+
+Todas las imágenes que conforman la aplicación están en Docker Hub con su correspondiente documentación:
+
+1.  [alang6154/geomiweb](https://hub.docker.com/repository/docker/alang6154/geomiweb/general)
+2.  [alang6154/geomiapi](https://hub.docker.com/repository/docker/alang6154/geomiapi/general)
+3.  [alang6154/geomidatabase](https://hub.docker.com/repository/docker/alang6154/geomidatabase/general)
+4.  [adminer](https://hub.docker.com/_/adminer)
+5.  [grafana/grafana](https://hub.docker.com/r/grafana/grafana)
+6.  [prom/prometheus](https://hub.docker.com/r/prom/prometheus)
 
 # Aspectos que se han estudiado
 - Nginx

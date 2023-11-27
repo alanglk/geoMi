@@ -15,7 +15,25 @@ const GOOGLE_CLIENT_ID = '212108694115-j6afrr08rui0rkmlgc02e0q3bnj3jhf2.apps.goo
 const GOOGLE_CLIENT_SECRET = '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'
 
 const register = new prometheus.Registry()      // Para enviar datos de monitorizacion
-prometheus.collectDefaultMetrics({ register })  // Habilitamos las metricas default
+register.setDefaultLabels({ app: 'geomiweb' })
+// prometheus.collectDefaultMetrics({ register })  // Habilitamos las metricas default
+// Numero de Logins exitosos
+const numLoginsTotal = new prometheus.Counter({ 
+  name: 'logins_total',
+  help: 'Total number of logins',
+  labelNames: ['login_method']
+})
+register.registerMetric(numLoginsTotal)
+
+// tiempos de peticiones para las metricas
+const httpRequestDurationMicroseconds = new prometheus.Histogram({ 
+  name: 'http_request_duration_ms',
+  help: 'Duration of HTTP requests in ms',
+  labelNames: ['method', 'route', 'code'],
+  buckets: [0.10, 5, 15, 50, 100, 200, 300, 400, 500]  // buckets for response time from 0.1ms to 500ms
+})
+register.registerMetric(httpRequestDurationMicroseconds)
+
 
 const port = 3000
 const app = express()
@@ -30,7 +48,18 @@ app.use(session({
   saveUninitialized: true, 
   secret: 'SECRET', 
   cookie: { secure: false, maxAge: 900000 }
-}))                                                                           // Utilizamos el Middleware para las sesiones (15 min duracion de cookie)
+}))                                
+
+// Registrar el instante de inicio de la consulta
+app.use((req, res, next) => {
+  console.log("Registro epoch")
+  res.locals.startEpoch = Date.now()
+  next()
+})
+
+
+
+// Utilizamos el Middleware para las sesiones (15 min duracion de cookie)
 app.set('views', path.join(__dirname, '/views'))                              // Path de la carpeta views
 app.set('view engine', 'ejs')                                                 // Establecemos el engine de renderizado
 
@@ -67,14 +96,15 @@ app.get('/', async (req, res) => {
 
 })
 
-app.get('/login', (req, res) => {
+app.get('/login', (req, res, next) => {
   if (req.session.auth){
     console.log(`Ya estas logeado como ${req.session.user.nombre}`)
     res.redirect("/")
   }else res.render('pages/login')
+  next()
 })
 
-app.get('/logout', (req, res, next) => {
+app.get('/logout', (req, res) => {
   req.logout((err) => {
     if (err) return next(err)
 
@@ -82,7 +112,7 @@ app.get('/logout', (req, res, next) => {
   })
 })
 
-app.post('/localize', async (req, res) => {
+app.post('/localize', async (req, res, next) => {
   if (!req.session.auth) res.send('Tienes que estar loggeado')
   else{
     console.log("LOCALIZE!!!")
@@ -92,9 +122,10 @@ app.post('/localize', async (req, res) => {
 
     res.send('OK!! Recarga la pagina para ver la nueva localización.')
   }
+  next()
 })
 
-app.post('/geocoding', async (req, res) => {
+app.post('/geocoding', async (req, res, next) => {
   // Nos comunicamos con la api (que no se muestra directamente al usuario)
   // Es enrebesado hacerlo así, pero la idea es que el cliente no acceda
   // directamente a la api, si no que sea la aplicación web.
@@ -107,16 +138,20 @@ app.post('/geocoding', async (req, res) => {
 
     res.send(await getGeocodingOfLocation(lat, lon))
   }
+
+  next()
 })
 
 // Endpoint para métricas de Prometheus
-app.get('/metrics', async (req, res) => {
+app.get('/metrics', async (req, res, next) => {
   res.setHeader('Content-Type', register.contentType)
   const metrics = await register.metrics()
   
   console.log("Enviando metricas a Prometheus")
   //console.log(metrics)
   res.send(metrics)
+
+  next()
 })
 
 // Solo está implementado el login con Google OAuth
@@ -138,6 +173,9 @@ app.get('/auth/google/success', (req, res) => {
     req.session.user = { id: id, nombre: nombre, email: email}
     addNewUser(id, nombre, email)
 
+    // Añadir nuevo login a las metricas
+    numLoginsTotal.inc({ login_method: "Google OAuth" })
+
     res.redirect('/')
   } 
 
@@ -145,6 +183,16 @@ app.get('/auth/google/success', (req, res) => {
   
 })
 app.get('/auth/google/error', (req, res) => res.send("Error logging in"))
+
+
+
+// Después de la consulta
+// Registrar metricas de prometheus del tiempo de cada consulta
+app.use((req, res, next) => {
+  const responseTimeInMs = Date.now() - res.locals.startEpoch
+  httpRequestDurationMicroseconds.labels(req.method, req.originalUrl, res.statusCode).observe(responseTimeInMs)
+  next()
+})
 
 // 
 app.listen(port, () => {

@@ -9,8 +9,8 @@
 services:
   # Aplicacion web principal. Es el contenedor de entrada del usuario.
   web:
-    image: alan/geomiweb
-    restart: always
+    image: alang6154/geomiweb
+    restart: unless-stopped
     ports:
       - 3000:3000
     networks: # Redes a las que está conectada la aplicación
@@ -20,8 +20,8 @@ services:
 
   # Contenedor de la api de geocoding. Se conecta al servicio de geocoding de Google.
   api:
-    image: alan/geomiapi
-    restart: always
+    image: alang6154/geomiapi
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile-geomiapi
@@ -32,8 +32,8 @@ services:
   
   # Base de datos de la aplicación. Es una base de datos MariaDB
   db:
-    image: mariadb
-    restart: always
+    image: alang6154/geomidatabase
+    restart: unless-stopped
     volumes:
       - ./db/database:/var/lib/mysql
     environment:
