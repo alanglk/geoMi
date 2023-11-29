@@ -35,7 +35,7 @@ services:
     image: alang6154/geomidatabase
     restart: unless-stopped
     volumes:
-      - ./db/database:/var/lib/mysql
+      - dataDB:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: admin
@@ -63,7 +63,7 @@ services:
       GF_AUTH_DISABLE_LOGIN_FORM: true 
       GF_AUTH_ANONYMOUS_ENABLED: true 
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
-    user: ${UID:-1000}
+    #user: ${UID:-1000}
     volumes:
       - ./debug/grafana/datasources/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
       - ./debug/grafana/dashboards:/var/lib/grafana/dashboards # Persistencia de los dashboards
@@ -95,15 +95,20 @@ services:
   prometheus:
     image: prom/prometheus
     restart: unless-stopped
-    user: ${UID:-1000}
+   # user: ${UID:-1000}
     volumes:
       - ./debug/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./debug/prometheus/data:/prometheus # Persistencia de las metricas
+      - dataLogs:/prometheus # Persistencia de las metricas
     ports:
       - 3006:9090
     networks:
       - monitoringNetwork
   
+
+
+volumes:
+  dataDB:
+  dataLogs:
 
 # Redes definidas para comunicar contenedores entre sí.
 # Por defecto, todos los contenedores están conectados a la misma red.
