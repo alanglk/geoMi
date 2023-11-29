@@ -175,7 +175,7 @@ app.get('/auth/google/success', (req, res) => {
 
     // Añadir nuevo login a las metricas
     numLoginsTotal.inc({ login_method: "Google OAuth" })
-
+    
     res.redirect('/')
   } 
 

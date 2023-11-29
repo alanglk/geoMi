@@ -65,8 +65,8 @@ services:
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
     user: ${UID:-1000}
     volumes:
-      - ./debug/grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
-      - ./debug/grafana:/var/lib/grafana # Persistencia de los dashboards y alertas
+      - ./debug/grafana/datasources/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./debug/grafana/dashboards:/var/lib/grafana/dashboards # Persistencia de los dashboards
     ports:
       - 3004:3000
     networks:
