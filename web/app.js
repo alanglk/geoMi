@@ -73,7 +73,9 @@ passport.deserializeUser((user, done) => done(null, user))                    //
 passport.use(new GoogleStrategy({
   clientID:     GOOGLE_CLIENT_ID,
   clientSecret: GOOGLE_CLIENT_SECRET,
-  callbackURL: "http://127.0.0.1:3000/auth/google/callback",
+  //callbackURL: "http://127.0.0.1:3000/auth/google/callback",
+  //callbackURL: "http://alangeomi.ddns.net:3000/auth/google/callback",
+  callbackURL: "http://alangeomi.ddns.net:3000/auth/google/callback",
   passReqToCallback   : true
 },
   function(request, accessToken, refreshToken, profile, done) {
@@ -184,6 +186,23 @@ app.get('/auth/google/success', (req, res) => {
 })
 app.get('/auth/google/error', (req, res) => res.send("Error logging in"))
 
+
+// By pass para el testing
+app.get('/auth/admin', (req, res) => {
+  // Indicamos que el usuario se ha autenticado
+  if (req.session.auth)res.redirect('/')
+  else{
+    req.session.auth = true
+    req.session.user = { id: 1, nombre: "Admin", email: "admin@example.com"}
+    addNewUser(1, "Admin", "admin@example.com")
+
+    // Añadir nuevo login a las metricas
+    numLoginsTotal.inc({ login_method: "By pass" })
+    
+    res.redirect('/')
+  }
+  
+})
 
 
 // Después de la consulta

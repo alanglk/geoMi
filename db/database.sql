@@ -45,8 +45,8 @@ CREATE TABLE localizaciones (
 -- Volcado de datos de ejemplo
 --
 INSERT INTO usuarios (id, nombre, email) VALUES
-    (1, 'Usuario1', 'usuario1@example.com'),
-    (2, 'Usuario2', 'usuario2@example.com');
+    (1, 'Admin', 'admin@example.com'),
+    (2, 'Usuario1', 'usuario2@example.com');
 
 INSERT INTO localizaciones ( usuario_id, latitud, longitud) VALUES
     (1, 40.7128, -74.0060),  
