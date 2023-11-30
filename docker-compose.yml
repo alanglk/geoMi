@@ -11,8 +11,8 @@ services:
   web:
     image: alang6154/geomiweb
     restart: unless-stopped
-    #ports: # Comentar cuando se use Nginx
-    #  - 3000:3000 
+    ports: # En deployment se debería comentar. Lo gestiona Nginx
+      - 3000:3000 
     networks: # Redes a las que está conectada la aplicación
       - webNetwork
       - databaseNetwork
