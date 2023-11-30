@@ -5,10 +5,9 @@ const express = require('express'),         // Aplicacion web
       cors = require('cors'),               // Habilitar CORS
       bodyParser = require('body-parser'),  // Permitir headers application/json
       prometheus = require('prom-client')   // Metricas de Prometheus
-
+      
 const { getLocationsOfUser, addNewLocationToUser, addNewUser } = require('./database')
 const { getGeocodingOfLocation } = require('./geomiapi')
-
 
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const GOOGLE_CLIENT_ID = '212108694115-j6afrr08rui0rkmlgc02e0q3bnj3jhf2.apps.googleusercontent.com'
@@ -75,7 +74,7 @@ passport.use(new GoogleStrategy({
   clientSecret: GOOGLE_CLIENT_SECRET,
   //callbackURL: "http://127.0.0.1:3000/auth/google/callback",
   //callbackURL: "http://alangeomi.ddns.net:3000/auth/google/callback",
-  callbackURL: "http://alangeomi.ddns.net:3000/auth/google/callback",
+  callbackURL: "http://web.alangeomi.com:3000/auth/google/callback",
   passReqToCallback   : true
 },
   function(request, accessToken, refreshToken, profile, done) {
@@ -215,5 +214,5 @@ app.use((req, res, next) => {
 
 // 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`GeoMi app listening on port ${port}`);
 })
