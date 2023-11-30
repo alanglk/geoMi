@@ -9,16 +9,16 @@ RUN npm install
 # Copiamos el resto de elementos de la aplicacion
 COPY ./web ./web
 
-# Instalamos Nginx
-RUN apt-get update && apt-get install -y nginx
-
-# Instalamos certbot para añadir los certificados ssl
-RUN apt-get install -y certbot python3-certbot-nginx
-RUN certbot run -n --nginx --agree-tos -d web.alangeomi.com,web.alangeomi.com  -m  alang6154j@gmail.com  --redirect
-
-# Copiamos la configuración de Nginx
-COPY ./web/nginx/default /etc/nginx/sites-available/default
-RUN service nginx reload
+## Instalamos Nginx
+#RUN apt-get update && apt-get install -y nginx
+#
+## Instalamos certbot para añadir los certificados ssl
+#RUN apt-get install -y certbot python3-certbot-nginx
+#RUN certbot run -n --nginx --agree-tos -d web.alangeomi.com,web.alangeomi.com  -m  alang6154j@gmail.com  --redirect
+#
+## Copiamos la configuración de Nginx
+#COPY ./web/nginx/default /etc/nginx/sites-available/default
+#RUN service nginx reload
 
 # Iniciamos la aplicacion (puerto 3000)
 CMD npm start

@@ -14,6 +14,7 @@ services:
     ports:
       - 3000:3000
     networks: # Redes a las que está conectada la aplicación
+      - webNetwork
       - databaseNetwork
       - apiNetwork
       - monitoringNetwork
@@ -63,7 +64,6 @@ services:
       GF_AUTH_DISABLE_LOGIN_FORM: true 
       GF_AUTH_ANONYMOUS_ENABLED: true 
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
-    #user: ${UID:-1000}
     volumes:
       - ./debug/grafana/datasources/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
       - ./debug/grafana/dashboards:/var/lib/grafana/dashboards # Persistencia de los dashboards
@@ -72,6 +72,66 @@ services:
     networks:
       - monitoringNetwork
 
+  # Contenedor Prometheus para gestionar la información de debugg
+  prometheus:
+    image: prom/prometheus
+    restart: unless-stopped
+    volumes:
+      - ./debug/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - dataLogs:/prometheus # Persistencia de las metricas
+    ports:
+      - 3006:9090
+    networks:
+      - monitoringNetwork
+  
+  # Proxypass con Ngix para aportar una capa de certificados SSL
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - web-root:/var/www/html
+      - ./web/nginx:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - web
+    networks:
+      - webNetwork
+
+  # Certbot para generar los certificados de la aplicación
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - nginx
+    command: certonly --webroot --webroot-path=/var/www/html --email alang6154j@gmail.com --agree-tos --no-eff-email --staging -d web.alangeomi.com
+
+# Volumenes de la aplicación
+volumes:
+  dataDB:
+  dataLogs: 
+  certbot-etc:
+  certbot-var:
+  web-root:
+
+# Redes definidas para comunicar contenedores entre sí.
+# Por defecto, todos los contenedores están conectados a la misma red.
+# De esta manera, estamos creando dos redes separadas para evitar que
+# la api que se comunica con Google tenga acceso a la base de datos.
+networks:
+  webNetwork:
+  databaseNetwork:
+  apiNetwork:
+  monitoringNetwork:
+
+
+# Esto estaría en services, pero no se utiliza. Lo dejo porque puede ser interesante en un futuro.
   # Exporter para tomar los datos de la base de datos y enviarselos a Prometheus
   #mysqld-exporter:
   #  image: prom/mysqld-exporter
@@ -90,31 +150,3 @@ services:
   #    - monitoringNetwork
   #  depends_on: # Se tiene que inicializar la base de datos antes
   #    - db
-
-  # Contenedor Prometheus para gestionar la información de debugg
-  prometheus:
-    image: prom/prometheus
-    restart: unless-stopped
-   # user: ${UID:-1000}
-    volumes:
-      - ./debug/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - dataLogs:/prometheus # Persistencia de las metricas
-    ports:
-      - 3006:9090
-    networks:
-      - monitoringNetwork
-  
-
-
-volumes:
-  dataDB:
-  dataLogs:
-
-# Redes definidas para comunicar contenedores entre sí.
-# Por defecto, todos los contenedores están conectados a la misma red.
-# De esta manera, estamos creando dos redes separadas para evitar que
-# la api que se comunica con Google tenga acceso a la base de datos.
-networks:
-  databaseNetwork:
-  apiNetwork:
-  monitoringNetwork:
