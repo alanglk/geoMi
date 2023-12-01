@@ -27,6 +27,167 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
+      "description": "Tiempo en procesar las peticiones por parte del servidor",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"http_request_duration_ms_sum\", app=\"geomiweb\", code=\"200\", instance=\"web:3000\", job=\"web\", method=\"GET\", route=\"/localize\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "GET /localize"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"http_request_duration_ms_sum\", app=\"geomiweb\", code=\"200\", instance=\"web:3000\", job=\"web\", method=\"GET\", route=\"/login\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "/login"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"http_request_duration_ms_sum\", app=\"geomiweb\", code=\"200\", instance=\"web:3000\", job=\"web\", method=\"POST\", route=\"/geocoding\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "/geocoding"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"http_request_duration_ms_sum\", app=\"geomiweb\", code=\"200\", instance=\"web:3000\", job=\"web\", method=\"POST\", route=\"/localize\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "POST /localize"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "http_request_duration_ms_sum"
+            },
+            "properties": [
+              {
+                "id": "custom.axisLabel",
+                "value": "ms"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "http_request_duration_ms_sum{route=~\"/login|/localize|/geocoding\", code=\"200\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Time of requests",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -110,7 +271,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 8
       },
       "id": 1,
       "options": {
@@ -161,6 +322,6 @@
   "timezone": "",
   "title": "GeoMi",
   "uid": "a641ba57-e36a-4c50-882d-c53c7d2092fb",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
