@@ -74,7 +74,7 @@ passport.use(new GoogleStrategy({
   clientSecret: GOOGLE_CLIENT_SECRET,
   //callbackURL: "http://127.0.0.1:3000/auth/google/callback",
   //callbackURL: "http://alangeomi.ddns.net:3000/auth/google/callback",
-  callbackURL: "http://web.alangeomi.com:3000/auth/google/callback",
+  callbackURL: "https://web.alangeomi.com/auth/google/callback",
   passReqToCallback   : true
 },
   function(request, accessToken, refreshToken, profile, done) {
