@@ -86,7 +86,7 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:               # Nombre y Namespace del Deployment
-  name: geomiweb-deploy
+  name: geomidatabase-deploy
   namespace: geomi
 
 spec:
