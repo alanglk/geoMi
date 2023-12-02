@@ -11,16 +11,16 @@ kind: Ingress
 
 metadata:
   name: geomiweb-ingress
-  metadata: geomi
+  namespace: geomi
 
 spec:
   rules:
   - http:
       paths:
-      - path: /
+      - path: /*
         pathType: ImplementationSpecific
         backend:
           service:
-            name: geomiweb-service # ClusterIP de geomiweb (geomi-services.yml)
+            name: geomiweb  # ClusterIP de geomiweb (geomi-services.yml)
             port:
               number: 3000

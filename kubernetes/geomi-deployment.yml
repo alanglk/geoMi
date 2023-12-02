@@ -44,7 +44,7 @@ spec:
         app: geomiweb
     spec:
       containers:       # Definición del pod
-        - name: geomiweb-pod
+        - name: geomiweb
           image: alang6154/geomiweb:latest
           ports:
             - containerPort: 3000  # Puerto de la aplicación web
@@ -73,7 +73,7 @@ spec:
         app: geomiapi
     spec:
       containers:       # Definición del pod
-        - name: geomiapi-pod
+        - name: geomiapi
           image: alang6154/geomiapi:latest
           ports:
             - containerPort: 8000   # Puerto de la API
@@ -102,7 +102,7 @@ spec:
         app: geomidatabase
     spec:
       containers:       # Definición del pod
-        - name: geomidatabase-pod
+        - name: geomidatabase
           image: alang6154/geomidatabase:latest
           env:
             - name: MYSQL_ROOT_PASSWORD

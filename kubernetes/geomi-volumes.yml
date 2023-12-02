@@ -5,6 +5,14 @@
 # Persistent Volume Claims de la aplicación GeoMi en Kubernetes
 # 
 
+# Namespace de GeoMi
+# Por si acaso no se ha ejecutado antes
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: geomi
+
+---
 
 apiVersion: v1
 kind: PersistentVolumeClaim
