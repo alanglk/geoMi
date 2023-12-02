@@ -97,7 +97,7 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
     depends_on:
-      - web
+      - geomiweb
     networks:
       - webNetwork
 
