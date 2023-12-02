@@ -1,0 +1,128 @@
+# Ingeniería Informática de Gestión y Sistemas de Información
+# Administración de Sistemas
+# Alan García Justel
+#
+# Deployments de la aplicación GeoMi en Kubernetes
+# Solo se lanzan los contenedores esenciales de la aplicación
+# debido a la complejidad de integrar todas las funcionalidades
+# de la aplicación en Kubernetes.
+#
+# NOTA: "---" separa las configuraciones de los Nodos Deployment
+#       para integrar todas las configuraciones en unn solo fichero        
+#
+
+
+# Namespace de GeoMi
+# Los Namespace sirven para organizar los Nodos de Kubernetes
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: geomi
+
+---
+
+# Deployment del servidor web GeoMi
+# Al no contar con los certificados ssl y no disponer de un DNS
+# Google OAuth y la geolocalización estarán desactivadas
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:               # Nombre y Namespace del Deployment
+  name: geomiweb-deploy
+  namespace: geomi
+
+spec:
+  replicas: 1           # Número de pods del Deployment
+
+  selector:             # Especifica qué pods deben ser parte del 
+    matchLabels:        # conjunto de réplicas del Deployment
+      app: geomiweb
+  
+  template:             # Definición de las "plantillas" de los pods
+    metadata:           # Se podría hacer en otro archivo
+      labels:
+        app: geomiweb
+    spec:
+      containers:       # Definición del pod
+        - name: geomiweb-pod
+          image: alang6154/geomiweb:latest
+          ports:
+            - containerPort: 3000  # Puerto de la aplicación web
+
+---
+
+# Deployment de la API de GeoMi
+#
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:               # Nombre y Namespace del Deployment
+  name: geomiapi-deploy
+  namespace: geomi
+
+spec:
+  replicas: 1           # Número de pods del Deployment
+
+  selector:             # Especifica qué pods deben ser parte del 
+    matchLabels:        # conjunto de réplicas del Deployment
+      app: geomiapi
+  
+  template:             # Definición de las "plantillas" de los pods
+    metadata:           # Se podría hacer en otro archivo
+      labels:
+        app: geomiapi
+    spec:
+      containers:       # Definición del pod
+        - name: geomiapi-pod
+          image: alang6154/geomiapi:latest
+          ports:
+            - containerPort: 8000   # Puerto de la API
+
+---
+
+# Deployment de la base de datos GeoMi
+# 
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:               # Nombre y Namespace del Deployment
+  name: geomiweb-deploy
+  namespace: geomi
+
+spec:
+  replicas: 1           # Número de pods del Deployment
+
+  selector:             # Especifica qué pods deben ser parte del 
+    matchLabels:        # conjunto de réplicas del Deployment
+      app: geomidatabase
+  
+  template:             # Definición de las "plantillas" de los pods
+    metadata:           # Se podría hacer en otro archivo
+      labels:
+        app: geomidatabase
+    spec:
+      containers:       # Definición del pod
+        - name: geomidatabase-pod
+          image: alang6154/geomidatabase:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+
+            - name: MYSQL_USER
+              value: "admin"
+
+            - name: MYSQL_PASSWORD
+              value: "test1234"
+
+            - name: MYSQL_DATABASE
+              value: "database"
+          ports:
+            - containerPort: 3306  # Puerto de la base de datos
+          volumeMounts:            # Volumen para gestionar la persistencia
+            - name: geomidatabase-volume
+              mountPath: /var/lib/mysql
+
+      volumes:
+        - name: geomidatabase-volume
+          persistentVolumeClaim:
+            claimName: geomidatabase-volume-claim  # Se utiliza en geomi-volumes.yml

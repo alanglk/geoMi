@@ -1,0 +1,26 @@
+# Ingeniería Informática de Gestión y Sistemas de Información
+# Administración de Sistemas
+# Alan García Justel
+#
+# Ingress de la aplicación GeoMi en Kubernetes
+# Exponemos las rutas HTTP y HTTPS de nuestra aplicacion al exterior 
+#
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: geomiweb-ingress
+  metadata: geomi
+
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: geomiweb-service # ClusterIP de geomiweb (geomi-services.yml)
+            port:
+              number: 3000

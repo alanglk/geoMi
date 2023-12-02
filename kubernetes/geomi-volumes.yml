@@ -1,0 +1,21 @@
+# Ingeniería Informática de Gestión y Sistemas de Información
+# Administración de Sistemas
+# Alan García Justel
+#
+# Persistent Volume Claims de la aplicación GeoMi en Kubernetes
+# 
+
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: geomidatabase-volume-claim        # Se referencia en geomi-deployment.yml
+  namespace: geomi
+
+spec:
+  accessModes:
+    - ReadWriteOnce                       # Solo es accesible por un nodo: base de datos
+  resources:
+    requests:
+      storage: 2Gi

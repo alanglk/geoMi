@@ -1,0 +1,75 @@
+# Ingeniería Informática de Gestión y Sistemas de Información
+# Administración de Sistemas
+# Alan García Justel
+#
+# Servicios de la aplicación GeoMi en Kubernetes
+# Los servicios de Kubernetes se utilizan para exponer aplicaciones y 
+# crear redes accesibles a ellas. De esta forma, identificamos los siguientes
+# tipos de servicios:
+#     - ClusterIP: similar a docker-compose Networks. Expone el servicio en una ip interna del cluster
+#     - NodePort: expone el servicio de forma externa en un puerto concreto del cluster
+#     - LoadBalancer: expone un servicio a través de un balanceador de carga
+#     - ExternalName: configura un DNS externo a un servicio
+#
+# Los servicios interesantes para GeoMi son ClusterIP y NodePort para la API y Grafana.
+# La gestión del acceso externo a la aplicación web lo realiza el nodo Ingress (geomi-ingress.yml).
+#
+
+# Servicio para geomiweb
+# Configuramos el puerto interno por el que se muestra la aplicación web
+# Necesario en geomi-ingress.yml
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: geomiweb-service # Se referencia en geomi-ingress.yml
+  namespace: geomi
+
+spec:
+  type: ClusterIP
+  selector:
+    app: geomiweb
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+
+---
+
+# Servicio para geomiapi
+# Configuramos el puerto externo por el que se accede a la API
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: geomiapi-service
+  namespace: geomi
+
+spec:
+  type: NodePort
+  selector:
+    app: geomiapi
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 3001
+
+---
+
+# Servicio para geomidatabase
+# Configuramos el puerto por el que se puede acceder a la BD
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: geomiapi-service
+  namespace: geomi
+
+spec:
+  type: ClusterIP
+  selector:
+    app: geomidatabase
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
