@@ -1,7 +1,7 @@
 // En esta implementacion no estamos teniendo en cuenta aspectos de seguridad
 const mariadb = require('mariadb');
 const pool = mariadb.createPool({
-     host: 'db', // 127.0.0.1 en local | db en la red docker
+     host: 'geomidatabase', // 127.0.0.1 en local | geomidatabase en la red docker
      //port: 3002, // solo para testing en local 
      user:'admin', 
      password: 'test1234',

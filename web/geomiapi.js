@@ -1,6 +1,6 @@
 const http = require('http')
 
-const host = "api:8000" // 127.0.0.1 en local | api:8000 en la red docker
+const host = "geomiapi:8000" // 127.0.0.1 en local | geomiapi:8000 en la red docker
 
 
 function makeRequest(url) {

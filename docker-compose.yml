@@ -8,7 +8,7 @@
 # Contenedores que conforman la aplicación.
 services:
   # Aplicacion web principal. Es el contenedor de entrada del usuario.
-  web:
+  geomiweb:
     image: alang6154/geomiweb
     restart: unless-stopped
     ports: # En deployment se debería comentar. Lo gestiona Nginx
@@ -20,7 +20,7 @@ services:
       - monitoringNetwork
 
   # Contenedor de la api de geocoding. Se conecta al servicio de geocoding de Google.
-  api:
+  geomiapi:
     image: alang6154/geomiapi
     restart: unless-stopped
     build:
@@ -32,7 +32,7 @@ services:
       - apiNetwork
   
   # Base de datos de la aplicación. Es una base de datos MariaDB
-  db:
+  geomidatabase:
     image: alang6154/geomidatabase
     restart: unless-stopped
     volumes:
