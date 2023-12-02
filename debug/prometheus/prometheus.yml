@@ -12,6 +12,6 @@ global:
   scrape_interval: 5s
 
 scrape_configs:
-  - job_name: 'web'
+  - job_name: 'geomiweb'
     static_configs:
-      - targets: ['web:3000']  # Puerto de la aplicacion web
+      - targets: ['geomiweb:3000']  # Puerto de la aplicacion web
