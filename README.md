@@ -2,32 +2,14 @@
     <a href="http://localhost:3000" target="_blank"><img alt="GeoMi" src="/documentation/images/geoMi.png" width="250" height="200"></a><br>GeoMi
 </h1>
 
-<p align="center">Visit <a href="/documentation/" target="_blank">geomi.pdf</a> for the full documentation,
+<p align="center">Visit <a href="/documentation/geomi.pdf" target="_blank">geomi.pdf</a> for the full documentation,
 examples and guides.</p>
 
 <div align="center">
     <!-- Etiquetas varias -->
 </div>
 
-# TODO LIST
-Aspectos que hay que cambiar en la aplicación antes de la entrega:
 
-1. Verificar que los contenedores están bien elegidos para la práctica
-
-2. Carga de `database.slq` de forma automática. Está especificado más abajo.
-
-3. Estudiar mejor las métricas que se mandan a __Prometheus__
-
-4. Preparar los __Dashboards__ de Grafana desde el fichero de configuración
-
-5. Hacer un deployment en __Kubernetes__ 
-
-6. Añadir, por si acaso, un Login tradicional.
-
-7. Subir las imágenes a __Docker Hub__
-
-
-# GeoMi
 GeoMi es una aplicación web desarrollada para la asignatura Administración de Sistemas del grado Ingeniería Informática de Gestión y Sistemas de Información de la UPV/EHU. El objetivo de este desarrollo es realizar una correcta configuración de servicios y contenedores Docker partiendo de una aplicación web compuesta por, al menos, tres contenedores:
 - Un servidor web
 - Una servidor de BBDD
@@ -56,11 +38,12 @@ Sin embargo, para acceder a todos los datos y a las opciones de añadir nuevas l
 
 
 ### Arquitectura de la aplicación
-TODO: Explicar contenedores, redes y comunicaciones entre contenedores. También hay que explicar aspectos básicos como la estructura de la base de datos o las comunicaciones con las APIs
+![Arquitectura](/documentation/images/Arquitectura.jpeg) 
+
+TODO: Explicar en el README. Actualmente en el pdf.
 
 
-
-## Instalación
+## Instalación local
 Puedes iniciar la apliación con `docker compose`:
 
 ```
@@ -100,8 +83,29 @@ Todas las imágenes que conforman la aplicación están en Docker Hub con su cor
 4.  [adminer](https://hub.docker.com/_/adminer)
 5.  [grafana/grafana](https://hub.docker.com/r/grafana/grafana)
 6.  [prom/prometheus](https://hub.docker.com/r/prom/prometheus)
+7.  [nginx](https://hub.docker.com/_/nginx)
+8.  [certbot/certbot](https://hub.docker.com/r/certbot/certbot)
 
 # Aspectos que se han estudiado
 - Nginx
 - mysqld-exporter
 - RabbitMQ
+
+
+# TODO LIST
+Aspectos que hay que cambiar en la aplicación antes de la entrega:
+
+1. Verificar que los contenedores están bien elegidos para la práctica
+
+2. Carga de `database.slq` de forma automática
+
+3. Estudiar mejor las métricas que se mandan a __Prometheus__
+
+4. Preparar los __Dashboards__ de Grafana desde el fichero de configuración
+
+5. Hacer un deployment en __Kubernetes__ 
+
+6. Añadir, por si acaso, un bypass en el Login
+
+7. Subir las imágenes a __Docker Hub__
+
